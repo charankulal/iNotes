@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 
 const mongoURI =
-  "mongodb://127.0.0.1/test";
+  "mongodb://127.0.0.1/Notes";
 
 const connectToMongo = () => {
   
