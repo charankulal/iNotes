@@ -2,11 +2,14 @@ const mongoose = require("mongoose");
 
 
 const mongoURI =
-  "mongodb://localhost:27017/";
+  "mongodb://127.0.0.1/test";
 
 const connectToMongo = () => {
   
-    mongoose.connect(mongoURI);
+  mongoose.connect(mongoURI,{
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+})
   }
 
 module.exports = connectToMongo;
