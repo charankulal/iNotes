@@ -1,7 +1,11 @@
 const express=require('express')
 const User = require('../models/User')
+const bcrypt=require('bcryptjs')
 const router=express.Router()
 const {body, validationResult} = require('express-validator')
+var jwt = require('jsonwebtoken');
+
+const JWT_SECRET_KEY='gatewayformyapplication'
 
 //Create a User using POST
 router.post('/createuser',[
@@ -17,17 +21,30 @@ router.post('/createuser',[
     //Check whether user exists
     try{
     let user= await User.findOne({email:req.body.email})
-    console.log(user)
+    // console.log(user)
     if(user){
         return  res.status(400).json({error:"User already exists"})
     }
+    //Creating the hashed password or implementing password hashing.
+    const salt= await bcrypt.genSalt(10) //generates the salt
+    const securedPassword=await bcrypt.hash(req.body.password,salt) //hashing the password using salt value
     // Creating a promise to create a user in User collection
     user= await User.create({
         name:req.body.name,
-        password:req.body.password,
+        password:securedPassword,
         email:req.body.email,
     })
-    res.json(user)}
+    //setting data
+    const data={
+        user:{
+            id:user.id ,
+        }
+    }
+    //Used to create a jwt authentication token or jwt token    
+    //sign() is a synchronized function --> no need of await
+    const jwtData=jwt.sign(data,JWT_SECRET_KEY)
+    console.log(jwtData)
+    res.json(jwtData)}
     //Catching the errors if user cannot created
     catch(error){
         console.log("Error in creating the new user", error);
