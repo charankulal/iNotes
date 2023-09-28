@@ -4,10 +4,11 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
+var fetchuser=require('../middleware/fetchuser')
 
 const JWT_SECRET_KEY = "gatewayformyapplication";
 
-//Create a User using POST
+//ROUTE 1:  Create a User using POST: "/api/auth/createuser"
 router.post(
   "/createuser",
   [
@@ -56,7 +57,7 @@ router.post(
   }
 );
 
-//Authenticating the new user using POST: "api/auth/login"
+//ROUTE 2:  Authenticating the user using POST: "api/auth/login"
 router.post(
     "/login",
     [
@@ -98,6 +99,21 @@ router.post(
         console.error(error.message)
       res.status(500).send("Internal server error");
       }
-    }
-)
+    })
+
+//ROUTE 3:  Get loggedin user's details using POST: "api/auth/getuser"
+router.post(
+  "/getuser",fetchuser, async (req, res) => {
+try {
+  var userId=req.user.id;
+  const user= await User.findById(userId).select("-password")
+  res.send(user)
+  console.log(user)
+  
+} catch (error) {
+  console.error(error.message)
+      res.status(500).send("Internal server error");
+}
+})
+
 module.exports = router;
