@@ -42,7 +42,7 @@ export default function Navbar() {
               placeholder="Search"
               aria-label="Search"
             />
-            <button className="btn btn-outline-warning" type="submit">
+            <button className="btn btn-outline-secondary" type="submit">
               Search
             </button>
           </form>
