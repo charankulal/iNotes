@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
-var fetchuser=require('../middleware/fetchuser')
+var fetchuser = require("../middleware/fetchuser");
 
 const JWT_SECRET_KEY = "gatewayformyapplication";
 
@@ -59,61 +59,59 @@ router.post(
 
 //ROUTE 2:  Authenticating the user using POST: "api/auth/login"
 router.post(
-    "/login",
-    [
-      body("email", "Enter a valid email").isEmail(),
-      body("password", "Enter a valid password").exists(),
-    ],
-    async (req, res) => {
-      //Reporting errors
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+  "/login",
+  [
+    body("email", "Enter a valid email").isEmail(),
+    body("password", "Enter a valid password").exists(),
+  ],
+  async (req, res) => {
+    //Reporting errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    //Destructuring and getting the values of email and password from req.body
+    const { email, password } = req.body;
+    try {
+      //Fetching the user creadential using email
+      let user = await User.findOne({ email });
+      //Reporting the error to the user
+      if (!user) {
+        return res.status(400).json({ error: "Invalid user credentials" });
       }
-      //Destructuring and getting the values of email and password from req.body
-      const {email,password}=req.body;
-      try {
-        //Fetching the user creadential using email
-        let user=await User.findOne({email})
-        //Reporting the error to the user
-        if(!user){
-          return res.status(400).json({error:'Invalid user credentials'})
-        }
-        //Comparing the passwords entered by user if we get valid email
-        const passwordCompare=await bcrypt.compare(password,user.password)
+      //Comparing the passwords entered by user if we get valid email
+      const passwordCompare = await bcrypt.compare(password, user.password);
 
-        if(!passwordCompare){
-          return res.status(400).json({error:'Invalid user credentials'})
-        }
+      if (!passwordCompare) {
+        return res.status(400).json({ error: "Invalid user credentials" });
+      }
 
-        const data = {
-          user: {
-            id: user.id,
-          },
-        };
-        const jwtData = jwt.sign(data, JWT_SECRET_KEY);
+      const data = {
+        user: {
+          id: user.id,
+        },
+      };
+      const jwtData = jwt.sign(data, JWT_SECRET_KEY);
       console.log(jwtData);
       res.json(jwtData);
-        
-      } catch (error) {
-        console.error(error.message)
+    } catch (error) {
+      console.error(error.message);
       res.status(500).send("Internal server error");
-      }
-    })
+    }
+  }
+);
 
 //ROUTE 3:  Get loggedin user's details using POST: "api/auth/getuser"
-router.post(
-  "/getuser",fetchuser, async (req, res) => {
-try {
-  var userId=req.user.id;
-  const user= await User.findById(userId).select("-password")
-  res.send(user)
-  console.log(user)
-  
-} catch (error) {
-  console.error(error.message)
-      res.status(500).send("Internal server error");
-}
-})
+router.post("/getuser", fetchuser, async (req, res) => {
+  try {
+    var userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    res.send(user);
+    console.log(user);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal server error");
+  }
+});
 
 module.exports = router;

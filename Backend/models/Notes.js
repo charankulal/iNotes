@@ -1,7 +1,13 @@
-const {mongoose,Schema} = require("mongoose")
+const mongoose = require('mongoose');
+const {Schema} = mongoose
 
 
 const NotesSchema=new Schema({
+    user:{
+        //Fetching the object from other schema or like foreign key
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'user',//Model name which is defined in models folder
+    },
     title:{
         type: String,
         required:true
@@ -21,5 +27,6 @@ const NotesSchema=new Schema({
     },
 }
 )
+const Notes=mongoose.model('notes',NotesSchema)
 
-module.exports=mongoose.model('notes',NotesSchema)
+module.exports=Notes
