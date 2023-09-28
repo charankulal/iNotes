@@ -18,8 +18,7 @@ router.get("/fetchallnotes", fetchuser, async (req, res) => {
 
 // ROUTE 2:  Add a new note using POST: "/api/notes/addnote" . Login required
 
-router.get(
-  "/addnote",
+router.get("/addnote",
   fetchuser,
   [
     body("title", "Enter a valid title").isLength({ min: 3 }),
@@ -51,34 +50,61 @@ router.get(
   }
 );
 
-// ROUTE 3:  Updating a existing note using POST: "/api/notes/updatenote" . Login required
+// ROUTE 3:  Updating a existing note using PUT: "/api/notes/updatenote" . Login required
 router.put("/updatenote/:id", fetchuser, async (req, res) => {
-    const {title,description,tag}=req.body
-
+  const { title, description, tag } = req.body;
+  try {
     //Create new Notes object
-    const newNotes={}
+    const newNotes = {};
 
-    if(title){
-        newNotes.title=title
+    if (title) {
+      newNotes.title = title;
     }
-    if(description){
-        newNotes.description=description
+    if (description) {
+      newNotes.description = description;
     }
-    if(tag){
-        newNotes.tag=tag
+    if (tag) {
+      newNotes.tag = tag;
     }
-    //Find the note to be updated 
-    var note=await Notes.findById(req.params.id)
-    if(!note)
-    {
-        res.status(404).send("Can't find any notes")
+    //Find the note to be updated
+    var note = await Notes.findById(req.params.id);
+    if (!note) {
+      res.status(404).send("Can't find any notes");
     }
-    if(note.user.toString()!== req.user.id)
-    {
-      return res.status(401).send("Not Authorized")
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Authorized");
     }
-    note=await Notes.findByIdAndUpdate(req.params.id,{$set:newNotes},{new:true})
-    res.json({note})
+    note = await Notes.findByIdAndUpdate(
+      req.params.id,
+      { $set: newNotes },
+      { new: true }
+    );
+    res.json({ note });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal server error");
+  }
+});
+
+// ROUTE 4:  Deletng a note using DELETE: "/api/notes/deletenote" . Login required
+router.delete("/deletenote/:id", fetchuser, async (req, res) => {
+  try {
+    //Find the note to be deleted
+    var note = await Notes.findById(req.params.id);
+    if (!note) {
+      res.status(404).send("Can't find any notes");
+    }
+
+    //Allow deletion only if user is owning
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Authorized");
+    }
+    note = await Notes.findByIdAndDelete(req.params.id);
+    res.json({ Success: "The note has been deleted." });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal server error");
+  }
 });
 
 module.exports = router;
