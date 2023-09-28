@@ -14,5 +14,5 @@ app.use('/api/auth',require('./routes/auth'))
 app.use('/api/notes',require('./routes/notes'))
 
 app.listen(port,()=>
-    console.log(`Application is running in localhost:${port}`)
+    console.log(`iNotebook is running in localhost:${port}`)
 )
