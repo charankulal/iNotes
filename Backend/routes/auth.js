@@ -18,6 +18,7 @@ router.post(
     body("password", "Enter a valid password").isLength({ min: 8 }),
   ],
   async (req, res) => {
+    let success=false
     // If errors found.. then return bad request
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -28,7 +29,7 @@ router.post(
       let user = await User.findOne({ email: req.body.email });
       // console.log(user)
       if (user) {
-        return res.status(400).json({ error: "User already exists" });
+        return res.status(400).json({success, error: "User already exists" });
       }
       //Creating the hashed password or implementing password hashing.
       const salt = await bcrypt.genSalt(10); //generates the salt
@@ -48,8 +49,9 @@ router.post(
       //Used to create a jwt authentication token or jwt token
       //sign() is a synchronized function --> no need of await
       const jwtData = jwt.sign(data, JWT_SECRET_KEY);
-      console.log(jwtData);
-      res.json(jwtData);
+      success=true
+      console.log({success,jwtData});
+      res.json({success,jwtData});
     } catch (error) {
       //Catching the errors if user cannot created
       console.log("Error in creating the new user", error);
