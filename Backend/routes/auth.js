@@ -55,6 +55,7 @@ router.post(
       res.status(500).send("Some error has occured");
     }
   }
+  
 );
 
 //ROUTE 2:  Authenticating the user using POST: "api/auth/login"
