@@ -26,34 +26,43 @@ const NotesState = (props) => {
     setNotes(json)
   };
   // Add a note
-  const addNote = async (title, description, tag) => {
 
+  const addNote = async (title, description, tag) => {
+    //TODO:API call
+    // API Call 
     const response = await fetch(`${host}/api/notes/addnote`, {
-      method: "POST",
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxNDU3MzhjZDU0ZTg2ZWE0MmQ5MzkwIn0sImlhdCI6MTY5NTg3NTMyN30.hwd5_sQfO5RcoTy3dYDkQ16u4ZClVcObw9BNOLGmFw8"
+      },
+      body: JSON.stringify({title, description, tag})
+    });
+
+    const note = await response.json();
+    setNotes(notes.concat(note))
+  }
+
+
+
+  // Delete a note
+  const deleteNote = async (id) => {
+
+    //API call
+    const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjUxNDU3MzhjZDU0ZTg2ZWE0MmQ5MzkwIn0sImlhdCI6MTY5NTg3NTMyN30.hwd5_sQfO5RcoTy3dYDkQ16u4ZClVcObw9BNOLGmFw8",
-      },
+      }
 
-      body: JSON.stringify({title,description,tag}),
+      
     });
+    var json=response.json()
+    console.log(json)
 
-
-    let note = {
-      _id: "651592affbfda03963b72abc",
-      user: "65145738cd54e86ea42d9390",
-      title: title,
-      description: description,
-      tag: tag,
-      date: "2023-09-28T14:50:23.691Z",
-      __v: 0,
-    };
-    setNotes(notes.concat(note));
-  };
-
-  // Delete a note
-  const deleteNote = (id) => {
+    //Logic to delete node
     console.log("Deleting the note with id" + id);
     let newNotes = notes.filter((note) => {
       return note._id !== id;
@@ -76,6 +85,7 @@ const NotesState = (props) => {
       body: JSON.stringify({title, description, tag}),
     });
     const json = response.json();
+    console.log(json)
 
     //Logic to edit a note
     for (let index = 0; index < notes.length; index++) {

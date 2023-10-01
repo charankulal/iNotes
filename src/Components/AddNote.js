@@ -7,16 +7,17 @@ import { useState } from "react";
 const AddNote = () => {
     const context = useContext(noteContext);
     const { addNote } = context;
-    const [note,setNote]=useState({title:"",desc:"",tag:""})
+    const [note,setNotes]=useState({title:"",description:"",tag:""})
 
 
     const handleClick=()=>{
-        addNote(note.title,note.desc,note.tag)
+        addNote(note.title,note.description,note.tag)
         document.getElementById("title").value=""
-        document.getElementById("desc").value=""
+        document.getElementById("description").value=""
+        document.getElementById("tag").value=""
     }
     const onChange=(e)=>{
-        setNote({...note, [e.target.name]:e.target.value})
+        setNotes({...note, [e.target.name]:e.target.value})
     }
 
   return (
@@ -37,15 +38,29 @@ const AddNote = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="desc" className="form-label">
+          <label htmlFor="description" className="form-label">
             Description
           </label>
           <input
             type="text"
             className="form-control"
-            id="desc"
+            id="description"
             placeholder="Description for notes"
-            name="desc"
+            name="description"
+            onChange={onChange}
+          />
+          
+        </div>
+        <div className="mb-3">
+          <label htmlFor="tag" className="form-label">
+            Tag
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="tag"
+            placeholder="Tag"
+            name="tag"
             onChange={onChange}
           />
           
