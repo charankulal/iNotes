@@ -12,6 +12,8 @@ const AddNote = () => {
 
     const handleClick=()=>{
         addNote(note.title,note.desc,note.tag)
+        document.getElementById("title").value=""
+        document.getElementById("desc").value=""
     }
     const onChange=(e)=>{
         setNote({...note, [e.target.name]:e.target.value})
