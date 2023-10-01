@@ -6,6 +6,7 @@ const { body, validationResult } = require("express-validator");
 var jwt = require("jsonwebtoken");
 var fetchuser = require("../middleware/fetchuser");
 
+
 const JWT_SECRET_KEY = "gatewayformyapplication";
 
 //ROUTE 1:  Create a User using POST: "/api/auth/createuser"
@@ -66,6 +67,7 @@ router.post(
     body("password", "Enter a valid password").exists(),
   ],
   async (req, res) => {
+    let success = false;
     //Reporting errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -78,13 +80,15 @@ router.post(
       let user = await User.findOne({ email });
       //Reporting the error to the user
       if (!user) {
+        success = false
         return res.status(400).json({ error: "Invalid user credentials" });
       }
       //Comparing the passwords entered by user if we get valid email
       const passwordCompare = await bcrypt.compare(password, user.password);
 
       if (!passwordCompare) {
-        return res.status(400).json({ error: "Invalid user credentials" });
+        success = false
+        return res.status(400).json({ success,error: "Invalid user credentials" });
       }
 
       const data = {
@@ -93,8 +97,10 @@ router.post(
         },
       };
       const jwtData = jwt.sign(data, JWT_SECRET_KEY);
-      console.log(jwtData);
-      res.json(jwtData);
+      
+      success = true;
+      console.log(success,jwtData);
+    res.json({ success, jwtData })
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal server error");
