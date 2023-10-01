@@ -45,6 +45,7 @@ const SignUp = (props) => {
 
   return (
     <>
+    <h2 className="m-3 text-secondary">Signup to register for iNotes</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="username" className="form-label">
