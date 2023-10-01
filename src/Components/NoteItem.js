@@ -13,7 +13,7 @@ const NoteItem = (props) => {
           <h5 className="card-title mx-4">{note.title}</h5>
           
           <i className="far fa-trash-alt  mx-3" onClick={()=>{deleteNote(note._id)}}></i>
-          <i className="far fa-edit mx-2"></i>
+          <i className="far fa-edit mx-2" onClick={()=>{deleteNote(note._id)}}></i>
           </div>
         </div>
         <p className="card-text">{note.description}</p>
