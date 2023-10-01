@@ -22,7 +22,7 @@ const Login = (props) => {
     console.log(json);
 
     if (json.success) {
-      localStorage.setItem("token", json);
+      localStorage.setItem("token", json.jwtData);
       history("/")
       props.showAlert("Logged in successfully",'success')
       // console.log("Passed "+json)

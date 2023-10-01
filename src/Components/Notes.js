@@ -3,11 +3,14 @@ import { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../context/notes/NotesContext";
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
+import { useNavigate } from "react-router-dom";
+
 
 const Notes = (props) => {
   const ref = useRef(null);
   const refClose = useRef(null);
   const context = useContext(noteContext);
+  let history=useNavigate()
   const { notes, getAllNotes, editNote } = context;
   const [note, setNotes] = useState({
     id: "",
@@ -17,7 +20,12 @@ const Notes = (props) => {
   });
 
   useEffect(() => {
+    if(localStorage.getItem('token')){
     getAllNotes();
+  }
+  else{
+    history("/login")
+  }
   });
 
   const updateNote = (currentNote) => {
@@ -154,7 +162,7 @@ const Notes = (props) => {
         {notes.length===0&&`Nothing to show here..`}
         </p>
         </div>
-        {notes.map((notes) => {
+        {notes.length!==0&&notes.map((notes) => {
           return (
             <NoteItem key={notes._id} updateNote={updateNote} note={notes} showAlert={props.showAlert}/>
           );

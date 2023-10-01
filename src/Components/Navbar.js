@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 export default function Navbar() {
+  const handleLogout=()=>{
+    localStorage.removeItem("token");
+    
+  }
   let location = useLocation();
 
   React.useEffect(() => {}, [location]);
@@ -49,12 +53,14 @@ export default function Navbar() {
             </li>
           </ul>
 
-          <Link className="btn btn-primary mx-2" to="/signup" role="button">
-            Sign Up
-          </Link>
+          {!localStorage.getItem('token')?
+          <form className="d-flex">
+            <Link className="btn btn-primary mx-2" to="/signup" role="button">Sign Up</Link>
           <Link className="btn btn-primary mx-2" to="/login" role="button">
             Login
           </Link>
+          </form>:<Link className="btn btn-primary mx-2" to="/login" role="button" onClick={handleLogout}>Logout</Link>
+                    }
           
         </div>
       </div>
