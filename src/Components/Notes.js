@@ -4,7 +4,7 @@ import noteContext from "../context/notes/NotesContext";
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
 
-const Notes = () => {
+const Notes = (props) => {
   const ref = useRef(null);
   const refClose = useRef(null);
   const context = useContext(noteContext);
@@ -43,7 +43,7 @@ const Notes = () => {
 
   return (
     <>
-      <AddNote />
+      <AddNote showAlert={props.showAlert}/>
 
       <button
         type="button"
@@ -156,7 +156,7 @@ const Notes = () => {
         </div>
         {notes.map((notes) => {
           return (
-            <NoteItem key={notes._id} updateNote={updateNote} note={notes} />
+            <NoteItem key={notes._id} updateNote={updateNote} note={notes} showAlert={props.showAlert}/>
           );
         })}
       </div>

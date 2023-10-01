@@ -24,6 +24,7 @@ const NotesState = (props) => {
 
     console.log("response is ", json )
     setNotes(json)
+    
   };
   // Add a note
 
@@ -41,6 +42,7 @@ const NotesState = (props) => {
 
     const note = await response.json();
     setNotes(notes.concat(note))
+    props.showAlert("Created Notes successfully",'success')
   }
 
 
@@ -68,6 +70,7 @@ const NotesState = (props) => {
       return note._id !== id;
     });
     setNotes(newNotes);
+    props.showAlert("Deleted a note successfully",'danger')
   };
 
   //Edit a note
@@ -96,6 +99,7 @@ const NotesState = (props) => {
         element.tag = tag;
       }
     }
+    props.showAlert("Edited the note successfully",'Success')
   };
 
   return (

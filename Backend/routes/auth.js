@@ -27,9 +27,12 @@ router.post(
     //Check whether user exists
     try {
       let user = await User.findOne({ email: req.body.email });
-      // console.log(user)
+      
       if (user) {
-        return res.status(400).json({success, error: "User already exists" });
+        console.log({success,error: "User already exists"})
+        return res.status(400).json({success, error: "User already exists" })
+        
+        
       }
       //Creating the hashed password or implementing password hashing.
       const salt = await bcrypt.genSalt(10); //generates the salt
