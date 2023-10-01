@@ -103,7 +103,7 @@ router.delete("/deletenote/:id", fetchuser, async (req, res) => {
     res.json({ Success: "The note has been deleted." });
   } catch (error) {
     console.error(error.message);
-    res.status(500).send("Internal server error");
+    // res.status(500).send("Internal server error");
   }
 });
 

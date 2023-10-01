@@ -35,6 +35,7 @@ const AddNote = () => {
             placeholder="Enter the title"
             name="title"
             onChange={onChange}
+            minLength={3} required
           />
         </div>
         <div className="mb-3">
@@ -48,6 +49,7 @@ const AddNote = () => {
             placeholder="Description for notes"
             name="description"
             onChange={onChange}
+            minLength={10} required
           />
           
         </div>
@@ -62,12 +64,13 @@ const AddNote = () => {
             placeholder="Tag"
             name="tag"
             onChange={onChange}
+            minLength={3} required
           />
           
         </div>
         <div className="mb-3 text-center">
-          <button type="button" className="btn btn-primary mb-3" onClick={handleClick}>
-            Add Notes
+          <button disabled={note.title.length<3||note.description.length<10||note.tag.length<3} type="button" className="btn btn-primary mb-3" onClick={handleClick}>
+            Add Note
           </button>
         </div>
       </form>
